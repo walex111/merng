@@ -6,7 +6,7 @@ import gql from "graphql-tag";
 
 import { useForm } from "../utils/hooks";
 
-const Register = (props) => {
+const Register = () => {
   const [errors, setErrors] = useState({});
   const { onChange, onSubmit, values } = useForm(registerUser, {
     username: "",
