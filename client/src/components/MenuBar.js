@@ -36,9 +36,7 @@ const MenuBar = () => {
           />
         </Menu.Menu>
       </Menu>
-      <div class="ui segment">
-        <p></p>
-      </div>
+      
     </div>
   );
 };

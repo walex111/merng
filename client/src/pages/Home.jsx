@@ -21,7 +21,6 @@ const Home = () => {
           data.getPosts.map((post) => (
             <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
               <PostCard post={post} />
-              <h1>hey</h1>
             </Grid.Column>
           ))
         )}
