@@ -17,7 +17,7 @@ function generateToken(user) {
       username: user.username,
     },
     SECRET_KEY,
-    { expiresIn: "100h" }
+    { expiresIn: "1h" }
   );
 }
 
@@ -30,13 +30,13 @@ module.exports = {
       }
       const user = await User.findOne({ username });
       if (!user) {
-        errors.generate = "User not found";
-        throw new ApolloError("User not found");
+        errors.general = "User not found";
+        throw new ApolloError("User not found", { errors });
       }
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        errors.generate = "Wrong Credentials";
-        throw new ApolloError("Wrong Credentials");
+        errors.general = "Wrong Credentials";
+        throw new ApolloError("Wrong Credentials", { errors });
       }
       const token = generateToken(user);
       return {
@@ -56,6 +56,7 @@ module.exports = {
         password,
         confirmPassword
       );
+      console.log(errors);
       if (!valid) {
         throw new ApolloError("Error", { errors });
       }
