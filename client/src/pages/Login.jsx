@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 
 import { useForm } from "../utils/hooks";
+import { AuthContext } from "../context/auth";
 
 const Login = () => {
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const { onChange, onSubmit, values } = useForm(loginUserCallback, {
     username: "",
@@ -14,7 +16,8 @@ const Login = () => {
   });
   let navigate = useNavigate();
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    update(_, result) {
+    update(_, { data: { login: userData } }) {
+      context.login(userData);
       navigate("/");
     },
     // TODO: figure out the error displaying
