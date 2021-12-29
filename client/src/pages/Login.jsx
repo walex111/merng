@@ -20,7 +20,7 @@ const Login = () => {
       context.login(userData);
       navigate("/");
     },
-    // TODO: figure out the error displaying
+    
     onError(err) {
       setErrors(err.graphQLErrors[0].extensions.code.errors);
     },
@@ -54,7 +54,7 @@ const Login = () => {
           onChange={onChange}
         />
         <Button type="submit" color="purple">
-          Login
+          LOGIN
         </Button>
       </Form>
       {Object.keys(errors).length > 0 && (

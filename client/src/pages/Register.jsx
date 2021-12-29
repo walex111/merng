@@ -75,7 +75,7 @@ const Register = () => {
           onChange={onChange}
         />
         <Button type="submit" color="purple">
-          Register
+          REGISTER
         </Button>
       </Form>
       {Object.keys(errors).length > 0 && (
