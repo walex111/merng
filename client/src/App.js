@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MenuBar from "./components/MenuBar";
+import SinglePost from "./pages/SinglePost";
 import { AuthProvider } from "./context/auth";
 import AuthRoute from "./utils/AuthRoute";
 
@@ -37,6 +38,7 @@ const App = () => {
                 </AuthRoute>
               }
             />
+            <Route exact path="/posts/:postId" element={<SinglePost />} />
           </Routes>
         </Container>
       </BrowserRouter>

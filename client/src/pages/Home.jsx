@@ -7,7 +7,7 @@ import { AuthContext } from "../context/auth";
 import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 
-const Home = () => {
+const Home = (props) => {
   const { user } = useContext(AuthContext);
   const { loading, data } = useQuery(FETCH_POST_QUERY);
 
@@ -31,7 +31,7 @@ const Home = () => {
             {data.getPosts &&
               data.getPosts.map((post) => (
                 <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
-                  <PostCard post={post} />
+                  <PostCard post={post} postId={post.id} />
                 </Grid.Column>
               ))}
           </Transition.Group>
