@@ -26,20 +26,30 @@ const PostForm = () => {
     createPost();
   }
   return (
-    <Form onSubmit={onSubmit}>
-      <h2>Create a Post ||:</h2>
-      <Form.Field>
-        <Form.Input
-          placeholder="SMIGGLE..."
-          name="body"
-          onChange={onChange}
-          value={values.body}
-        />
-        <Button type="submit" color="purple">
-          SUBMIT
-        </Button>
-      </Form.Field>
-    </Form>
+    <>
+      <Form onSubmit={onSubmit}>
+        <h2>Create a Post ||:</h2>
+        <Form.Field>
+          <Form.Input
+            placeholder="SMIGGLE..."
+            name="body"
+            error={error ? true : false}
+            onChange={onChange}
+            value={values.body}
+          />
+          <Button type="submit" color="purple">
+            SUBMIT
+          </Button>
+        </Form.Field>
+      </Form>
+      {error && (
+        <div className="ui error message" style={{ marginBottom: 20 }}>
+          <ul className="list">
+            <li>{error.message}</li>
+          </ul>
+        </div>
+      )}
+    </>
   );
 };
 
