@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useQuery } from "@apollo/react-hooks";
-import { FETCH_POST_QUERY } from "../utils/graphql";
+import { FETCH_POSTS_QUERY } from "../utils/graphql";
 
 import { Grid, Transition } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
@@ -9,12 +9,16 @@ import PostForm from "../components/PostForm";
 
 const Home = (props) => {
   const { user } = useContext(AuthContext);
-  const { loading, data } = useQuery(FETCH_POST_QUERY);
+  const { loading, data } = useQuery(FETCH_POSTS_QUERY);
 
   return (
     <Grid columns={3} divided>
       <Grid.Row className="h-page_title">
         <h1>Recent Posts</h1>
+        <p>
+          Please Login with: Username ||:<span className="home-span">SO</span>{" "}
+          and Password||: <span className="home-span">300300</span>
+        </p>
       </Grid.Row>
       <Grid.Row>
         {user && (

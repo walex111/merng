@@ -2,7 +2,8 @@ import React, { useContext, useState, useRef } from "react";
 import gql from "graphql-tag";
 import moment from "moment";
 import { useMutation } from "@apollo/client";
-import { useQuery } from "@apollo/client";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@apollo/react-hooks";
 import {
   Grid,
   Image,
@@ -11,6 +12,7 @@ import {
   Icon,
   Label,
   Form,
+  Popup,
 } from "semantic-ui-react";
 
 import { AuthContext } from "../context/auth";
@@ -19,21 +21,14 @@ import DeleteButton from "../components/DeleteButton";
 
 import { CREATE_COMMENT_MUTATION } from "../utils/graphql";
 
-
-//TODO: singlePost params error !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 const SinglePost = (props) => {
-  const postId = props.match.params.postId;
+  let { postId } = useParams();
   const { user } = useContext(AuthContext);
 
   const commentInputRef = useRef(null);
 
   const [comment, setComment] = useState("");
-  console.log(postId);
-  const {
-    data: { getPost },
-    loading,
-  } = useQuery(FETCH_POST_QUERY, {
+  const { data: { getPost } = {}, loading } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId,
     },
@@ -70,7 +65,7 @@ const SinglePost = (props) => {
     } = getPost;
 
     postMarkup = (
-      <Grid>
+      <Grid columns={3} divided style={{ marginTop: 20 }}>
         <Grid.Row>
           <Grid.Column>
             <Image
@@ -90,20 +85,29 @@ const SinglePost = (props) => {
               <hr />
               <Card.Content>
                 <LikeButton user={user} post={{ id, likeCount, likes }} />
-                <Button
-                  as="div"
-                  labelPosition="right"
-                  onClick={() => console.log("comment on post")}
-                >
-                  <Button color="blue" basic>
-                    <Icon name="comment"></Icon>
-                  </Button>
-                  <Label basic color="blue" pointing="left">
-                    {commentCount}
-                  </Label>
-                </Button>
+                <Popup
+                  content="Comment on Post"
+                  trigger={
+                    <Button
+                      as="div"
+                      labelPosition="right"
+                      onClick={() => console.log("comment on post")}
+                    >
+                      <Button color="blue" basic>
+                        <Icon name="comment"></Icon>
+                      </Button>
+                      <Label basic color="blue" pointing="left">
+                        {commentCount}
+                      </Label>
+                    </Button>
+                  }
+                />
                 {user && user.username === username && (
-                  <DeleteButton postId={id} callback={deletePostCallback} />
+                  <DeleteButton
+                    postId={id}
+                    commentId={id}
+                    callback={deletePostCallback}
+                  />
                 )}
               </Card.Content>
             </Card>
@@ -140,7 +144,7 @@ const SinglePost = (props) => {
                   {user && user.username === comment.username && (
                     <DeleteButton postId={id} commentId={comment.id} />
                   )}
-                  <Card.Header>{comment.username}</Card.Header>
+                  <Card.Header>{username}</Card.Header>
                   <Card.Meta>
                     {moment(comment.createdAt).fromNow(true)}
                   </Card.Meta>
@@ -157,7 +161,7 @@ const SinglePost = (props) => {
 };
 
 const FETCH_POST_QUERY = gql`
-  query ($postId: ID!) {
+  query getPost($postId: ID!) {
     getPost(postId: $postId) {
       id
       body
@@ -170,6 +174,7 @@ const FETCH_POST_QUERY = gql`
       commentCount
       comments {
         id
+        body
         username
         createdAt
       }

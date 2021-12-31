@@ -38,7 +38,7 @@ const App = () => {
                 </AuthRoute>
               }
             />
-            <Route exact path="/posts/:postId" element={<SinglePost />} />
+            <Route exact path={"/posts/:postId"} element={<SinglePost />} />
           </Routes>
         </Container>
       </BrowserRouter>

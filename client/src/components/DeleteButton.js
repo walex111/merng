@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 
-import { Button, Icon, Confirm } from "semantic-ui-react";
-import { FETCH_POST_QUERY } from "../utils/graphql";
+import { Button, Icon, Confirm, Popup } from "semantic-ui-react";
+import { FETCH_POSTS_QUERY } from "../utils/graphql";
 
 const DeleteButton = ({ postId, commentId, callback }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -11,14 +11,17 @@ const DeleteButton = ({ postId, commentId, callback }) => {
   const [deletePostOrMutation] = useMutation(mutation, {
     update(proxy) {
       setConfirmOpen(false);
-      const data = proxy.readQuery({
-        query: FETCH_POST_QUERY,
-      });
-      data.getPosts = data.getPosts.filter((p) => p.id !== postId);
-      proxy.writeQuery({ query: FETCH_POST_QUERY, data });
-      if (callback) {
-        callback();
+      if (!commentId) {
+        const oldPosts = proxy.readQuery({
+          query: FETCH_POSTS_QUERY,
+        });
+        const newData = oldPosts.getPosts.filter((p) => p.id !== postId);
+        proxy.writeQuery({
+          query: FETCH_POSTS_QUERY,
+          data: { getPosts: newData },
+        });
       }
+      if (callback) callback();
     },
     variables: {
       postId,
@@ -27,14 +30,21 @@ const DeleteButton = ({ postId, commentId, callback }) => {
   });
   return (
     <>
-      <Button
-        as="div"
-        color="red"
-        floated="right"
-        onClick={() => setConfirmOpen(true)}
-      >
-        <Icon name="trash" style={{ margin: 0 }} />
-      </Button>
+      <Popup
+        content={commentId ? "Delete Comment" : "DeletePost"}
+        inverted
+        trigger={
+          <Button
+            as="div"
+            color="red"
+            floated="right"
+            onClick={() => setConfirmOpen(true)}
+          >
+            <Icon name="trash" style={{ margin: 0 }} />
+          </Button>
+        }
+      />
+
       <Confirm
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}
